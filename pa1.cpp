@@ -9,7 +9,7 @@ class runway{
 public:
     vector<pair<int,int>> land_queue1;
     vector<pair<int,int>> land_queue2;
-    priority_queue<pair<int,pair<int,int>>, vector<pair<int,pair<int,int>>>, greater<pair<int,pair<int,int>>> > lq1;
+    //priority_queue<pair<int,pair<int,int>>, vector<pair<int,pair<int,int>>>, greater<pair<int,pair<int,int>>> > lq1;
     //(fuel_lv ,land id ,enter land queue time)
     vector<int> tkoff_queue;
     int id_now=-1;
@@ -149,7 +149,7 @@ public:
             cout << "takeoff plane:";
             for(int i=0;i<tkoff_number;i++){
                 cout << '(' << tkoff_id << "), ";
-                if((int)rw1.tkoff_queue.size() < tk_total/4 +1 || rw1.tkoff_queue.size() == 0){
+                if((int)rw1.tkoff_queue.size() < (tk_total-stat.ald_tkoff)/4 +1 || rw1.tkoff_queue.size() == 0){
                     rw1.tkoff_queue.emplace_back(tkoff_id);
                 }
                 else if(dc_rwqe%3==0){
@@ -188,8 +188,8 @@ public:
             }*/
             for(int i=0;i<(int)rw2.land_queue1.size();i++){
                 if(rw2.land_queue1[i].second == 0){
-                    cout << '(' << rw1.land_queue1[i].first << ", 0), ";
-                    eg_queue.emplace_back(rw1.land_queue1[i].first);
+                    cout << '(' << rw2.land_queue1[i].first << ", 0), ";
+                    eg_queue.emplace_back(rw2.land_queue1[i].first);
                     stat.eg_plane++;
                 }
             }
@@ -379,8 +379,11 @@ public:
 };
 
 int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
     airport ap;
-    int simu_time=20;
+    int simu_time=500;
     cout << "How many time unit you want to simulate: " << simu_time << '\n';
     for(int t=1;t<=simu_time;t++){
         ap.i_output(t);
