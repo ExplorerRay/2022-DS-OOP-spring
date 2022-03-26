@@ -11,7 +11,6 @@ public:
     vector<pair<int,int>> land_queue2;
     vector<int> tkoff_queue;
     int id_now=-1;
-    int tt_plane=0;//total plane on runway(useless???)
 };
 class statistic{
 public:
@@ -101,8 +100,8 @@ public:
         cout << "\n\n";
     }
     void print_statinfo(){
-        cout << "average landing waiting time: ";
-        cout << "average takeoff waiting time: ";
+        cout << "average landing waiting time: " << '\n';
+        cout << "average takeoff waiting time: " << '\n';
         cout << "average fuel saved: " << (double)stat.time_saved/stat.ald_land << '\n';
         cout << "total plane in emergency: " << stat.eg_plane << '\n';
         cout << "total plane crashed: " << stat.crash_plane;
@@ -148,23 +147,19 @@ public:
             cout << "takeoff plane:";
             for(int i=0;i<tkoff_number;i++){
                 cout << '(' << tkoff_id << "), ";
-                if((int)rw1.tkoff_queue.size() < tk_total/4 +1 || rw1.tt_plane == 0){
+                if((int)rw1.tkoff_queue.size() < tk_total/4 +1 || rw1.tkoff_queue.size() == 0){
                     rw1.tkoff_queue.emplace_back(tkoff_id);
-                    rw1.tt_plane++;
                 }
                 else if(dc_rwqe%3==0){
                     rw2.tkoff_queue.emplace_back(tkoff_id);
-                    rw2.tt_plane++;
                     dc_rwqe++;
                 }
                 else if(dc_rwqe%3==1){
                     rw3.tkoff_queue.emplace_back(tkoff_id);
-                    rw3.tt_plane++;
                     dc_rwqe++;
                 }
                 else{
                     rw4.tkoff_queue.emplace_back(tkoff_id);
-                    rw4.tt_plane++;
                     dc_rwqe++;
                 }
                 //else 要注意
@@ -381,9 +376,8 @@ public:
 
 int main(){
     airport ap;
-    cout << "How many time unit you want to simulate: ";
-    int simu_time=2;
-    cout << '\n';
+    int simu_time=10;
+    cout << "How many time unit you want to simulate: " << simu_time << '\n';
     for(int t=1;t<=simu_time;t++){
         ap.i_output(t);
         ap.run(1);
@@ -391,4 +385,6 @@ int main(){
         ap.run(3);
         ap.run(4);
     }
+    cout << "How many time unit you simulate: " << simu_time << '\n';
+    ap.print_statinfo();
 }
