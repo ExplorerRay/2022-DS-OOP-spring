@@ -17,7 +17,8 @@ class airport{
 public:
     int land_number,land_id=1,fuel_lv,total=0;
     int tkoff_number,tkoff_id=0,tk_total=0;
-    vector<int> eg_queue;
+    int dc_rwqe=0;//decide runway and queue只有rw234 [%3==0(rw1) %3==1(rw2)...
+    vector<int> eg_queue;//queue of emergent plane
     //vector<pair<int,int>> land_wait;
     runway rw1,rw2,rw3,rw4;
 
@@ -111,7 +112,7 @@ public:
                 fuel_lv = rand()%11;
                 //land_wait.emplace_back(make_pair(land_id,fuel_lv));
                 cout << '(' << land_id << ", " << fuel_lv << "), ";
-                if((int)rw2.land_queue1.size() < total/3 || rw2.land_queue1.size() == 0){
+                /*if((int)rw2.land_queue1.size() < total/3 || rw2.land_queue1.size() == 0){
                     rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
                     rw2.tt_plane++;
                 }
@@ -135,7 +136,22 @@ public:
                     rw4.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
                     rw4.tt_plane++;
                 }
-                else rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                else rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));*/
+                if(dc_rwqe%3==0){
+                    if(rw2.land_queue1.size() <= rw2.land_queue2.size())rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                    else rw2.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                    dc_rwqe++;
+                }
+                else if(dc_rwqe%3==1){
+                    if(rw3.land_queue1.size() <= rw3.land_queue2.size())rw3.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                    else rw3.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                    dc_rwqe++;
+                }
+                else{
+                    if(rw4.land_queue1.size() <= rw4.land_queue2.size())rw4.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                    else rw4.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                    dc_rwqe++;
+                }
                 //可能可再改 注意tt_plane及else部分
 
                 land_id+=2;
@@ -149,21 +165,24 @@ public:
             cout << "takeoff plane:";
             for(int i=0;i<tkoff_number;i++){
                 cout << '(' << tkoff_id << "), ";
-                if((int)rw1.tkoff_queue.size() < tk_total/4 || rw1.tt_plane == 0){
+                if((int)rw1.tkoff_queue.size() < tk_total/4 +1 || rw1.tt_plane == 0){
                     rw1.tkoff_queue.emplace_back(tkoff_id);
                     rw1.tt_plane++;
                 }
-                else if((int)rw4.tkoff_queue.size() < tk_total/4 || rw4.tt_plane == 0){
-                    rw4.tkoff_queue.emplace_back(tkoff_id);
-                    rw4.tt_plane++;
-                }
-                else if((int)rw3.tkoff_queue.size() < tk_total/4 || rw3.tt_plane == 0){
-                    rw3.tkoff_queue.emplace_back(tkoff_id);
-                    rw3.tt_plane++;
-                }
-                else{
+                else if(dc_rwqe%3==0){
                     rw2.tkoff_queue.emplace_back(tkoff_id);
                     rw2.tt_plane++;
+                    dc_rwqe++;
+                }
+                else if(dc_rwqe%3==1){
+                    rw3.tkoff_queue.emplace_back(tkoff_id);
+                    rw3.tt_plane++;
+                    dc_rwqe++;
+                }
+                else{
+                    rw4.tkoff_queue.emplace_back(tkoff_id);
+                    rw4.tt_plane++;
+                    dc_rwqe++;
                 }
                 //else 要注意
                 tkoff_id+=2;
