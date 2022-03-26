@@ -9,6 +9,8 @@ class runway{
 public:
     vector<pair<int,int>> land_queue1;
     vector<pair<int,int>> land_queue2;
+    priority_queue<pair<int,pair<int,int>>, vector<pair<int,pair<int,int>>>, greater<pair<int,pair<int,int>>> > lq1;
+    //(fuel_lv ,land id ,enter land queue time)
     vector<int> tkoff_queue;
     int id_now=-1;
 };
@@ -100,8 +102,8 @@ public:
         cout << "\n\n";
     }
     void print_statinfo(){
-        cout << "average landing waiting time: " << '\n';
-        cout << "average takeoff waiting time: " << '\n';
+        cout << "average landing waiting time: " << (double)stat.wt_land_tm/land_total << '\n';
+        cout << "average takeoff waiting time: " << (double)stat.wt_tkoff_tm/tk_total << '\n';
         cout << "average fuel saved: " << (double)stat.time_saved/stat.ald_land << '\n';
         cout << "total plane in emergency: " << stat.eg_plane << '\n';
         cout << "total plane crashed: " << stat.crash_plane;
@@ -339,6 +341,8 @@ public:
                     rw4.tkoff_queue.pop_back();
                 }
             }
+            stat.wt_land_tm = stat.wt_land_tm + land_total - stat.ald_land;
+            stat.wt_tkoff_tm = stat.wt_tkoff_tm + tk_total - stat.ald_tkoff;
 
             //fuel level decrease 
             for(int i=0;i<(int)rw2.land_queue1.size();i++){
@@ -376,7 +380,7 @@ public:
 
 int main(){
     airport ap;
-    int simu_time=10;
+    int simu_time=20;
     cout << "How many time unit you want to simulate: " << simu_time << '\n';
     for(int t=1;t<=simu_time;t++){
         ap.i_output(t);
