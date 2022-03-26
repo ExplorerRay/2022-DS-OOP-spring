@@ -15,12 +15,14 @@ public:
 };
 class statistic{
 public:
-    int crash_plane=0;
+    int crash_plane=0, eg_plane=0,time_saved=0;
+    int wt_land_tm=0,wt_tkoff_tm=0;//wait time of land and takeoff
+    int ald_land=0,ald_tkoff=0;//already land and takeoff
 };
 
 class airport{
 public:
-    int land_number,land_id=1,fuel_lv,total=0;
+    int land_number,land_id=1,fuel_lv,land_total=0;
     int tkoff_number,tkoff_id=0,tk_total=0;
     int dc_rwqe=0;//decide runway and queue只有rw234 [%3==0(rw1) %3==1(rw2)...
     vector<int> eg_queue;//queue of emergent plane's id
@@ -98,13 +100,20 @@ public:
         }
         cout << "\n\n";
     }
+    void print_statinfo(){
+        cout << "average landing waiting time: ";
+        cout << "average takeoff waiting time: ";
+        cout << "average fuel saved: " << (double)stat.time_saved/stat.ald_land << '\n';
+        cout << "total plane in emergency: " << stat.eg_plane << '\n';
+        cout << "total plane crashed: " << stat.crash_plane;
+    }
 
     void run(int step){
         cout << "Step " << step << '\n';
         if(step==1){//land plane coming
             srand((unsigned)time(NULL));
             land_number = rand()%5;//number of landing plane
-            total+=land_number;
+            land_total+=land_number;
             cout << "landing plane:";
             srand((unsigned)time(NULL));
             for(int i=0;i<land_number;i++){
@@ -166,52 +175,60 @@ public:
         }
         else if(step==3){//determine emergent plane
             cout << "emergent plane:";
-            for(int i=0;i<(int)rw1.land_queue1.size();i++){
+            /*for(int i=0;i<(int)rw1.land_queue1.size();i++){
                 if(rw1.land_queue1[i].second == 0){
                     cout << '(' << rw1.land_queue1[i].first << ", 0), ";
                     eg_queue.emplace_back(rw1.land_queue1[i].first);
+                    stat.eg_plane++;
                 }
             }
             for(int i=0;i<(int)rw1.land_queue2.size();i++){
                 if(rw1.land_queue2[i].second == 0){
                     cout << '(' << rw1.land_queue2[i].first << ", 0), ";
                     eg_queue.emplace_back(rw1.land_queue2[i].first);
+                    stat.eg_plane++;
                 }
-            }
+            }*/
             for(int i=0;i<(int)rw2.land_queue1.size();i++){
                 if(rw2.land_queue1[i].second == 0){
                     cout << '(' << rw1.land_queue1[i].first << ", 0), ";
                     eg_queue.emplace_back(rw1.land_queue1[i].first);
+                    stat.eg_plane++;
                 }
             }
             for(int i=0;i<(int)rw2.land_queue2.size();i++){
                 if(rw2.land_queue2[i].second == 0){
                     cout << '(' << rw2.land_queue2[i].first << ", 0), ";
                     eg_queue.emplace_back(rw2.land_queue2[i].first);
+                    stat.eg_plane++;
                 }
             }
             for(int i=0;i<(int)rw3.land_queue1.size();i++){
                 if(rw3.land_queue1[i].second == 0){
                     cout << '(' << rw3.land_queue1[i].first << ", 0), ";
                     eg_queue.emplace_back(rw3.land_queue1[i].first);
+                    stat.eg_plane++;
                 }
             }
             for(int i=0;i<(int)rw3.land_queue2.size();i++){
                 if(rw3.land_queue2[i].second == 0){
                     cout << '(' << rw3.land_queue2[i].first << ", 0), ";
                     eg_queue.emplace_back(rw3.land_queue2[i].first);
+                    stat.eg_plane++;
                 }
             }
             for(int i=0;i<(int)rw4.land_queue1.size();i++){
                 if(rw4.land_queue1[i].second == 0){
                     cout << '(' << rw4.land_queue1[i].first << ", 0), ";
                     eg_queue.emplace_back(rw4.land_queue1[i].first);
+                    stat.eg_plane++;
                 }
             }
             for(int i=0;i<(int)rw4.land_queue2.size();i++){
                 if(rw4.land_queue2[i].second == 0){
                     cout << '(' << rw4.land_queue2[i].first << ", 0), ";
                     eg_queue.emplace_back(rw4.land_queue2[i].first);
+                    stat.eg_plane++;
                 }
             }
             cout << "\n\n";
@@ -229,11 +246,13 @@ public:
                     else rw4.id_now = eg_queue[i];
                 }
             }
+            stat.ald_tkoff += min((int)eg_queue.size(),4);
             eg_queue.clear();
             
             if(rw1.id_now == -1){
                 if(!rw1.tkoff_queue.empty()){
                     rw1.id_now = rw1.tkoff_queue[0];
+                    stat.ald_tkoff++;
                     //pop front?
                     for(int i=0;i<(int)rw1.tkoff_queue.size()-1;i++){
                         rw1.tkoff_queue[i]=rw1.tkoff_queue[i+1];
@@ -244,6 +263,8 @@ public:
             if(rw2.id_now == -1){
                 if(!rw2.land_queue1.empty()){
                     rw2.id_now = rw2.land_queue1[0].first;
+                    stat.time_saved += rw2.land_queue1[0].second;
+                    stat.ald_land++;
                     for(int i=0;i<(int)rw2.land_queue1.size()-1;i++){
                         rw2.land_queue1[i]=rw2.land_queue1[i+1];
                     }
@@ -251,6 +272,8 @@ public:
                 }
                 else if(!rw2.land_queue2.empty()){
                     rw2.id_now = rw2.land_queue2[0].first;
+                    stat.time_saved += rw2.land_queue2[0].second;
+                    stat.ald_land++;
                     for(int i=0;i<(int)rw2.land_queue2.size()-1;i++){
                         rw2.land_queue2[i]=rw2.land_queue2[i+1];
                     }
@@ -258,6 +281,7 @@ public:
                 }
                 else if(!rw2.tkoff_queue.empty()){
                     rw2.id_now = rw2.tkoff_queue[0];
+                    stat.ald_tkoff++;
                     for(int i=0;i<(int)rw2.tkoff_queue.size()-1;i++){
                         rw2.tkoff_queue[i]=rw2.tkoff_queue[i+1];    
                     }
@@ -267,6 +291,8 @@ public:
             if(rw3.id_now == -1){
                 if(!rw3.land_queue1.empty()){
                     rw3.id_now = rw3.land_queue1[0].first;
+                    stat.time_saved += rw3.land_queue1[0].second;
+                    stat.ald_land++;
                     for(int i=0;i<(int)rw3.land_queue1.size()-1;i++){
                         rw3.land_queue1[i]=rw3.land_queue1[i+1];
                     }
@@ -274,6 +300,8 @@ public:
                 }
                 else if(!rw3.land_queue2.empty()){
                     rw3.id_now = rw3.land_queue2[0].first;
+                    stat.time_saved += rw3.land_queue2[0].second;
+                    stat.ald_land++;
                     for(int i=0;i<(int)rw3.land_queue2.size()-1;i++){
                         rw3.land_queue2[i]=rw3.land_queue2[i+1];
                     }
@@ -281,6 +309,7 @@ public:
                 }
                 else if(!rw3.tkoff_queue.empty()){
                     rw3.id_now = rw3.tkoff_queue[0];
+                    stat.ald_tkoff++;
                     for(int i=0;i<(int)rw3.tkoff_queue.size()-1;i++){
                         rw3.tkoff_queue[i]=rw3.tkoff_queue[i+1];
                     }
@@ -290,6 +319,8 @@ public:
             if(rw4.id_now == -1){
                 if(!rw4.land_queue1.empty()){
                     rw4.id_now = rw4.land_queue1[0].first;
+                    stat.time_saved += rw4.land_queue1[0].second;
+                    stat.ald_land++;
                     for(int i=0;i<(int)rw4.land_queue1.size()-1;i++){
                         rw4.land_queue1[i]=rw4.land_queue1[i+1];
                     }
@@ -297,6 +328,8 @@ public:
                 }
                 else if(!rw4.land_queue2.empty()){
                     rw4.id_now = rw4.land_queue2[0].first;
+                    stat.time_saved += rw4.land_queue2[0].second;
+                    stat.ald_land++;
                     for(int i=0;i<(int)rw4.land_queue2.size()-1;i++){
                         rw4.land_queue2[i]=rw4.land_queue2[i+1];
                     }
@@ -304,6 +337,7 @@ public:
                 }
                 else if(!rw4.tkoff_queue.empty()){
                     rw4.id_now = rw4.tkoff_queue[0];
+                    stat.ald_tkoff++;
                     for(int i=0;i<(int)rw4.tkoff_queue.size()-1;i++){
                         rw4.tkoff_queue[i]=rw4.tkoff_queue[i+1];
                     }
@@ -335,20 +369,26 @@ public:
         }
     }
 
-    void i_output(){
-        cout << "Simulation time: 1\n\n";
-        for(int t=1;t<=4;t++){
-            cout << "Runway" << t << "(-1)\n";
-            cout << "L1:\nL2:\nT:\n\n";
-        }
+    void i_output(int T){
+        cout << "Simulation time: " << T << "\n\n";
+        rw1.id_now = -1;
+        rw2.id_now = -1;
+        rw3.id_now = -1;
+        rw4.id_now = -1;
+        print_rwinfo();
     }
 };
 
 int main(){
     airport ap;
-    ap.i_output();
-    ap.run(1);
-    ap.run(2);
-    ap.run(3);
-    ap.run(4);
+    cout << "How many time unit you want to simulate: ";
+    int simu_time=2;
+    cout << '\n';
+    for(int t=1;t<=simu_time;t++){
+        ap.i_output(t);
+        ap.run(1);
+        ap.run(2);
+        ap.run(3);
+        ap.run(4);
+    }
 }
