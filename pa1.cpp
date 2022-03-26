@@ -238,8 +238,100 @@ public:
                     for(int i=0;i<(int)rw1.tkoff_queue.size()-1;i++){
                         rw1.tkoff_queue[i]=rw1.tkoff_queue[i+1];
                     }
+                    rw1.tkoff_queue.pop_back();
                 }
             }
+            if(rw2.id_now == -1){
+                if(!rw2.land_queue1.empty()){
+                    rw2.id_now = rw2.land_queue1[0].first;
+                    for(int i=0;i<(int)rw2.land_queue1.size()-1;i++){
+                        rw2.land_queue1[i]=rw2.land_queue1[i+1];
+                    }
+                    rw2.land_queue1.pop_back();
+                }
+                else if(!rw2.land_queue2.empty()){
+                    rw2.id_now = rw2.land_queue2[0].first;
+                    for(int i=0;i<(int)rw2.land_queue2.size()-1;i++){
+                        rw2.land_queue2[i]=rw2.land_queue2[i+1];
+                    }
+                    rw2.land_queue2.pop_back();
+                }
+                else if(!rw2.tkoff_queue.empty()){
+                    rw2.id_now = rw2.tkoff_queue[0];
+                    for(int i=0;i<(int)rw2.tkoff_queue.size()-1;i++){
+                        rw2.tkoff_queue[i]=rw2.tkoff_queue[i+1];    
+                    }
+                    rw2.tkoff_queue.pop_back();
+                }
+            }
+            if(rw3.id_now == -1){
+                if(!rw3.land_queue1.empty()){
+                    rw3.id_now = rw3.land_queue1[0].first;
+                    for(int i=0;i<(int)rw3.land_queue1.size()-1;i++){
+                        rw3.land_queue1[i]=rw3.land_queue1[i+1];
+                    }
+                    rw3.land_queue1.pop_back();
+                }
+                else if(!rw3.land_queue2.empty()){
+                    rw3.id_now = rw3.land_queue2[0].first;
+                    for(int i=0;i<(int)rw3.land_queue2.size()-1;i++){
+                        rw3.land_queue2[i]=rw3.land_queue2[i+1];
+                    }
+                    rw3.land_queue2.pop_back();
+                }
+                else if(!rw3.tkoff_queue.empty()){
+                    rw3.id_now = rw3.tkoff_queue[0];
+                    for(int i=0;i<(int)rw3.tkoff_queue.size()-1;i++){
+                        rw3.tkoff_queue[i]=rw3.tkoff_queue[i+1];
+                    }
+                    rw3.tkoff_queue.pop_back();
+                }
+            }
+            if(rw4.id_now == -1){
+                if(!rw4.land_queue1.empty()){
+                    rw4.id_now = rw4.land_queue1[0].first;
+                    for(int i=0;i<(int)rw4.land_queue1.size()-1;i++){
+                        rw4.land_queue1[i]=rw4.land_queue1[i+1];
+                    }
+                    rw4.land_queue1.pop_back();
+                }
+                else if(!rw4.land_queue2.empty()){
+                    rw4.id_now = rw4.land_queue2[0].first;
+                    for(int i=0;i<(int)rw4.land_queue2.size()-1;i++){
+                        rw4.land_queue2[i]=rw4.land_queue2[i+1];
+                    }
+                    rw4.land_queue2.pop_back();
+                }
+                else if(!rw4.tkoff_queue.empty()){
+                    rw4.id_now = rw4.tkoff_queue[0];
+                    for(int i=0;i<(int)rw4.tkoff_queue.size()-1;i++){
+                        rw4.tkoff_queue[i]=rw4.tkoff_queue[i+1];
+                    }
+                    rw4.tkoff_queue.pop_back();
+                }
+            }
+
+            //fuel level decrease 
+            for(int i=0;i<(int)rw2.land_queue1.size();i++){
+                //if(rw2.land_queue1[i].first != rw2.id_now)
+                rw2.land_queue1[i].second--;
+            }
+            for(int i=0;i<(int)rw2.land_queue2.size();i++){
+                rw2.land_queue2[i].second--;
+            }
+            for(int i=0;i<(int)rw3.land_queue1.size();i++){
+                rw3.land_queue1[i].second--;
+            }
+            for(int i=0;i<(int)rw3.land_queue2.size();i++){
+                rw3.land_queue2[i].second--;
+            }
+            for(int i=0;i<(int)rw4.land_queue1.size();i++){
+                rw4.land_queue1[i].second--;
+            }
+            for(int i=0;i<(int)rw4.land_queue2.size();i++){
+                rw4.land_queue2[i].second--;
+            }
+            print_rwinfo();
         }
     }
 
@@ -258,4 +350,5 @@ int main(){
     ap.run(1);
     ap.run(2);
     ap.run(3);
+    ap.run(4);
 }
