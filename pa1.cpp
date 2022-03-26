@@ -4,13 +4,18 @@
 using namespace std;
 
 //未將飛機加入queue中
+//未處理fuel_lv隨時間減少的情形 當減的時候看到有LV是0便直接捨棄(已墜機或起飛)
 class runway{
 public:
     vector<pair<int,int>> land_queue1;
     vector<pair<int,int>> land_queue2;
     vector<int> tkoff_queue;
     int id_now=-1;
-    int tt_plane=0;//total plane on runway
+    int tt_plane=0;//total plane on runway(useless???)
+};
+class statistic{
+public:
+    int crash_plane=0;
 };
 
 class airport{
@@ -18,9 +23,11 @@ public:
     int land_number,land_id=1,fuel_lv,total=0;
     int tkoff_number,tkoff_id=0,tk_total=0;
     int dc_rwqe=0;//decide runway and queue只有rw234 [%3==0(rw1) %3==1(rw2)...
-    vector<int> eg_queue;//queue of emergent plane
+    vector<int> eg_queue;//queue of emergent plane's id
+    
     //vector<pair<int,int>> land_wait;
     runway rw1,rw2,rw3,rw4;
+    statistic stat;
 
     void print_rwinfo(){
         cout << "Runway1(" << rw1.id_now << ")\n";
@@ -91,15 +98,7 @@ public:
         }
         cout << "\n\n";
     }
-    /*vector<pair<int,int>> decide_que(){
-        if((int)rw2.land_queue1.size() < total/3 || rw2.land_queue1.size() == 0)return rw2.land_queue1;
-        else if((int)rw3.land_queue1.size() < total/3 || rw3.land_queue1.size() == 0)return rw3.land_queue1;
-        else if((int)rw4.land_queue1.size() < total/3 || rw4.land_queue1.size() == 0)return rw4.land_queue1;
-        else if((int)rw2.land_queue2.size() < total/3 || rw2.land_queue2.size() == 0)return rw2.land_queue2;
-        else if((int)rw3.land_queue2.size() < total/3 || rw3.land_queue2.size() == 0)return rw3.land_queue2;
-        else if((int)rw4.land_queue2.size() < total/3 || rw4.land_queue2.size() == 0)return rw4.land_queue2;
-        else return rw2.land_queue1;
-    } doesn't work*/
+
     void run(int step){
         cout << "Step " << step << '\n';
         if(step==1){//land plane coming
@@ -109,34 +108,9 @@ public:
             cout << "landing plane:";
             srand((unsigned)time(NULL));
             for(int i=0;i<land_number;i++){
-                fuel_lv = rand()%11;
+                fuel_lv = rand()%10 +1;
                 //land_wait.emplace_back(make_pair(land_id,fuel_lv));
                 cout << '(' << land_id << ", " << fuel_lv << "), ";
-                /*if((int)rw2.land_queue1.size() < total/3 || rw2.land_queue1.size() == 0){
-                    rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
-                    rw2.tt_plane++;
-                }
-                else if((int)rw3.land_queue1.size() < total/3 || rw3.land_queue1.size() == 0){
-                    rw3.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
-                    rw3.tt_plane++;
-                }
-                else if((int)rw4.land_queue1.size() < total/3 || rw4.land_queue1.size() == 0){
-                    rw4.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
-                    rw4.tt_plane++;
-                }
-                else if((int)rw2.land_queue2.size() < total/3 || rw2.land_queue2.size() == 0){
-                    rw2.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
-                    rw2.tt_plane++;
-                }
-                else if((int)rw3.land_queue2.size() < total/3 || rw3.land_queue2.size() == 0){
-                    rw3.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
-                    rw3.tt_plane++;
-                }
-                else if((int)rw4.land_queue2.size() < total/3 || rw4.land_queue2.size() == 0){
-                    rw4.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
-                    rw4.tt_plane++;
-                }
-                else rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));*/
                 if(dc_rwqe%3==0){
                     if(rw2.land_queue1.size() <= rw2.land_queue2.size())rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
                     else rw2.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
@@ -242,6 +216,30 @@ public:
             }
             cout << "\n\n";
             print_rwinfo();
+        }
+        else{//step 4 decide which plane to takeoff or land
+            cout << '\n';
+            if(eg_queue.size() > 4)stat.crash_plane += eg_queue.size()-4;
+            for(int i=0;i<(int)eg_queue.size();i++){
+                if(i>=4)break;
+                if(i==0)rw1.id_now = eg_queue[i];
+                else{
+                    if((dc_rwqe+i-1)%3 == 0)rw2.id_now = eg_queue[i];
+                    else if((dc_rwqe+i-1)%3 == 1)rw3.id_now = eg_queue[i];
+                    else rw4.id_now = eg_queue[i];
+                }
+            }
+            eg_queue.clear();
+            
+            if(rw1.id_now == -1){
+                if(!rw1.tkoff_queue.empty()){
+                    rw1.id_now = rw1.tkoff_queue[0];
+                    //pop front?
+                    for(int i=0;i<(int)rw1.tkoff_queue.size()-1;i++){
+                        rw1.tkoff_queue[i]=rw1.tkoff_queue[i+1];
+                    }
+                }
+            }
         }
     }
 
