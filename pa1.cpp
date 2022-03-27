@@ -3,8 +3,6 @@
 
 using namespace std;
 
-//未將飛機加入queue中
-//未處理fuel_lv隨時間減少的情形 當減的時候看到有LV是0便直接捨棄(已墜機或起飛)
 class runway{
 public:
     vector<pair<int,int>> land_queue1;
@@ -222,14 +220,14 @@ public:
             if(eg_queue.size() > 4)stat.crash_plane += eg_queue.size()-4;
             for(int i=0;i<(int)eg_queue.size();i++){
                 if(i>=4)break;
-                if(i==0){rw1.id_now = eg_queue[i];stat.ald_tkoff++;}
+                if(i==0)rw1.id_now = eg_queue[i];
                 else{
-                    if((dc_rwqe+i-1)%3 == 0){rw2.id_now = eg_queue[i];stat.ald_tkoff++;}
-                    else if((dc_rwqe+i-1)%3 == 1){rw3.id_now = eg_queue[i];stat.ald_tkoff++;}
-                    else {rw4.id_now = eg_queue[i];stat.ald_tkoff++;}
+                    if((dc_rwqe+i-1)%3 == 0)rw2.id_now = eg_queue[i];
+                    else if((dc_rwqe+i-1)%3 == 1)rw3.id_now = eg_queue[i];
+                    else rw4.id_now = eg_queue[i];
                 }
             }
-            //stat.ald_tkoff += min((int)eg_queue.size(),4);
+            stat.ald_land += min((int)eg_queue.size(),4);
             eg_queue.clear();
             
             if(rw1.id_now == -1){
@@ -238,6 +236,21 @@ public:
                     stat.ald_tkoff++;
                     //pop front?
                     rw1.tkoff_queue.erase(rw1.tkoff_queue.begin());
+                }
+                else if(rw2.tkoff_queue.size()!=0){
+                    rw1.id_now = rw2.tkoff_queue[0];
+                    stat.ald_tkoff++;
+                    rw2.tkoff_queue.erase(rw2.tkoff_queue.begin());
+                }
+                else if(rw3.tkoff_queue.size()!=0){
+                    rw1.id_now = rw3.tkoff_queue[0];
+                    stat.ald_tkoff++;
+                    rw3.tkoff_queue.erase(rw3.tkoff_queue.begin());
+                }
+                else if(rw4.tkoff_queue.size()!=0){
+                    rw1.id_now = rw4.tkoff_queue[0];
+                    stat.ald_tkoff++;
+                    rw4.tkoff_queue.erase(rw4.tkoff_queue.begin());
                 }
             }
             if(rw2.id_now == -1){
@@ -297,6 +310,7 @@ public:
                     rw4.tkoff_queue.erase(rw4.tkoff_queue.begin());
                 }
             }
+            //stat.ald_tkoff = tk_total - rw1.tkoff_queue.size() - rw2.tkoff_queue.size() - rw3.tkoff_queue.size() - rw4.tkoff_queue.size();
             stat.wt_land_tm = stat.wt_land_tm + land_total - stat.ald_land;
             stat.wt_tkoff_tm = stat.wt_tkoff_tm + tk_total - stat.ald_tkoff;
 
