@@ -118,18 +118,66 @@ public:
                 fuel_lv = rand()%10 +1;
                 cout << '(' << land_id << ", " << fuel_lv << "), ";
                 if(dc_rwqe%3==0){
-                    if(rw2.land_queue1.size() <= rw2.land_queue2.size())rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
-                    else rw2.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                    if(rw2.land_queue1.size() <= rw2.land_queue2.size()){
+                        if(rw2.land_queue1.empty())rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                        else if(fuel_lv >= rw2.land_queue1[rw2.land_queue1.size()-1].second)rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                        else{
+                            for(int pl=0;pl<(int)rw2.land_queue1.size();pl++){
+                                if(fuel_lv < rw2.land_queue1[pl].second)rw2.land_queue1.insert(rw2.land_queue1.begin()+pl,make_pair(land_id,fuel_lv));
+                            }
+                        }
+                    }
+                    else{
+                        if(rw2.land_queue2.empty())rw2.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                        else if(fuel_lv >= rw2.land_queue2[rw2.land_queue2.size()-1].second)rw2.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                        else{
+                            for(int pl=0;pl<(int)rw2.land_queue2.size();pl++){
+                                if(fuel_lv < rw2.land_queue2[pl].second)rw2.land_queue2.insert(rw2.land_queue2.begin()+pl,make_pair(land_id,fuel_lv));
+                            }
+                        }
+                    }
                     dc_rwqe++;
                 }
                 else if(dc_rwqe%3==1){
-                    if(rw3.land_queue1.size() <= rw3.land_queue2.size())rw3.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
-                    else rw3.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                    if(rw3.land_queue1.size() <= rw3.land_queue2.size()){
+                        if(rw3.land_queue1.empty())rw3.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                        else if(fuel_lv >= rw3.land_queue1[rw3.land_queue1.size()-1].second)rw3.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                        else{
+                            for(int pl=0;pl<(int)rw3.land_queue1.size();pl++){
+                                if(fuel_lv < rw3.land_queue1[pl].second)rw3.land_queue1.insert(rw3.land_queue1.begin()+pl,make_pair(land_id,fuel_lv));
+                            }
+                        }
+                    }
+                    else{
+                        if(rw3.land_queue2.empty())rw3.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                        else if(fuel_lv >= rw3.land_queue2[rw3.land_queue2.size()-1].second)rw3.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                        else{
+                            for(int pl=0;pl<(int)rw3.land_queue2.size();pl++){
+                                if(fuel_lv < rw3.land_queue2[pl].second)rw3.land_queue2.insert(rw3.land_queue2.begin()+pl,make_pair(land_id,fuel_lv));
+                            }
+                        }
+                    }
                     dc_rwqe++;
                 }
                 else{
-                    if(rw4.land_queue1.size() <= rw4.land_queue2.size())rw4.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
-                    else rw4.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                    if(rw4.land_queue1.size() <= rw4.land_queue2.size()){
+                        if(rw4.land_queue1.empty())rw4.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                        else if(fuel_lv >= rw4.land_queue1[rw4.land_queue1.size()-1].second)rw4.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
+                        else{
+                            for(int pl=0;pl<(int)rw4.land_queue1.size();pl++){
+                                if(fuel_lv < rw4.land_queue1[pl].second)rw4.land_queue1.insert(rw4.land_queue1.begin()+pl,make_pair(land_id,fuel_lv));
+                            }
+                        }
+                    }
+                    else{
+                        if(rw4.land_queue2.empty())rw4.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                        else if(fuel_lv >= rw4.land_queue2[rw4.land_queue2.size()-1].second)rw4.land_queue2.emplace_back(make_pair(land_id,fuel_lv));
+                        else{
+                            for(int pl=0;pl<(int)rw4.land_queue2.size();pl++){
+                                if(fuel_lv < rw4.land_queue2[pl].second)rw4.land_queue2.insert(rw4.land_queue2.begin()+pl,make_pair(land_id,fuel_lv));
+                            }
+                        }
+                    }
                     dc_rwqe++;
                 }
                 //可能可再改 注意else部分
@@ -174,6 +222,7 @@ public:
                     eg_queue.emplace_back(rw2.land_queue1[i].first);
                     stat.eg_plane++;
                 }
+                else break;
             }
             for(int i=0;i<(int)rw2.land_queue2.size();i++){
                 if(rw2.land_queue2[i].second == 0){
@@ -181,6 +230,7 @@ public:
                     eg_queue.emplace_back(rw2.land_queue2[i].first);
                     stat.eg_plane++;
                 }
+                else break;
             }
             for(int i=0;i<(int)rw3.land_queue1.size();i++){
                 if(rw3.land_queue1[i].second == 0){
@@ -188,6 +238,7 @@ public:
                     eg_queue.emplace_back(rw3.land_queue1[i].first);
                     stat.eg_plane++;
                 }
+                else break;
             }
             for(int i=0;i<(int)rw3.land_queue2.size();i++){
                 if(rw3.land_queue2[i].second == 0){
@@ -195,6 +246,7 @@ public:
                     eg_queue.emplace_back(rw3.land_queue2[i].first);
                     stat.eg_plane++;
                 }
+                else break;
             }
             for(int i=0;i<(int)rw4.land_queue1.size();i++){
                 if(rw4.land_queue1[i].second == 0){
@@ -202,6 +254,7 @@ public:
                     eg_queue.emplace_back(rw4.land_queue1[i].first);
                     stat.eg_plane++;
                 }
+                else break;
             }
             for(int i=0;i<(int)rw4.land_queue2.size();i++){
                 if(rw4.land_queue2[i].second == 0){
@@ -209,6 +262,7 @@ public:
                     eg_queue.emplace_back(rw4.land_queue2[i].first);
                     stat.eg_plane++;
                 }
+                else break;
             }
             cout << "\n\n";
             print_rwinfo();
@@ -360,7 +414,7 @@ int main(){
     cin.tie(0);
 
     airport ap;
-    int simu_time=500;
+    int simu_time=100;
     bool b=true;
     cout << "How many time unit you want to simulate: " << simu_time << '\n';
     for(int t=1;t<=simu_time;t++){
