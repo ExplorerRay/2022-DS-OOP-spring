@@ -168,6 +168,7 @@ public:
                     cout << '(' << rw2.land_queue1[i].first << ", 0), ";
                     eg_queue.emplace_back(rw2.land_queue1[i].first);
                     stat.eg_plane++;
+                    rw2.land_queue1.erase(rw2.land_queue1.begin()+i);
                 }
             }
             for(int i=0;i<(int)rw2.land_queue2.size();i++){
@@ -175,6 +176,7 @@ public:
                     cout << '(' << rw2.land_queue2[i].first << ", 0), ";
                     eg_queue.emplace_back(rw2.land_queue2[i].first);
                     stat.eg_plane++;
+                    rw2.land_queue2.erase(rw2.land_queue2.begin()+i);
                 }
             }
             for(int i=0;i<(int)rw3.land_queue1.size();i++){
@@ -182,6 +184,7 @@ public:
                     cout << '(' << rw3.land_queue1[i].first << ", 0), ";
                     eg_queue.emplace_back(rw3.land_queue1[i].first);
                     stat.eg_plane++;
+                    rw3.land_queue1.erase(rw3.land_queue1.begin()+i);
                 }
             }
             for(int i=0;i<(int)rw3.land_queue2.size();i++){
@@ -189,6 +192,7 @@ public:
                     cout << '(' << rw3.land_queue2[i].first << ", 0), ";
                     eg_queue.emplace_back(rw3.land_queue2[i].first);
                     stat.eg_plane++;
+                    rw3.land_queue2.erase(rw3.land_queue2.begin()+i);
                 }
             }
             for(int i=0;i<(int)rw4.land_queue1.size();i++){
@@ -196,6 +200,7 @@ public:
                     cout << '(' << rw4.land_queue1[i].first << ", 0), ";
                     eg_queue.emplace_back(rw4.land_queue1[i].first);
                     stat.eg_plane++;
+                    rw4.land_queue1.erase(rw4.land_queue1.begin()+i);
                 }
             }
             for(int i=0;i<(int)rw4.land_queue2.size();i++){
@@ -203,13 +208,10 @@ public:
                     cout << '(' << rw4.land_queue2[i].first << ", 0), ";
                     eg_queue.emplace_back(rw4.land_queue2[i].first);
                     stat.eg_plane++;
+                    rw4.land_queue2.erase(rw4.land_queue2.begin()+i);
                 }
             }
-            cout << "\n\n";
-            print_rwinfo();
-        }
-        else{//step 4 decide which plane to takeoff or land
-            cout << '\n';
+
             if(eg_queue.size() > 4)stat.crash_plane += eg_queue.size()-4;
             for(int i=0;i<(int)eg_queue.size();i++){
                 if(i>=4)break;
@@ -221,6 +223,11 @@ public:
                 }
             }
             eg_queue.clear();
+            cout << "\n\n";
+            print_rwinfo();
+        }
+        else{//step 4 decide which plane to takeoff or land
+            cout << '\n';
             
             if(rw1.id_now == -1){
                 if(rw1.tkoff_queue.size()!=0){
@@ -301,29 +308,22 @@ public:
 
             //fuel level decrease and delete planes whose fuel lv=0
             for(int i=0;i<(int)rw2.land_queue1.size();i++){
-                //if(rw2.land_queue1[i].first != rw2.id_now)
-                if(rw2.land_queue1[i].second == 0)rw2.land_queue1.erase(rw2.land_queue1.begin()+i);
-                else rw2.land_queue1[i].second--;
+                rw2.land_queue1[i].second--;
             }
             for(int i=0;i<(int)rw2.land_queue2.size();i++){
-                if(rw2.land_queue2[i].second == 0)rw2.land_queue2.erase(rw2.land_queue2.begin()+i);
-                else rw2.land_queue2[i].second--;
+                rw2.land_queue2[i].second--;
             }
             for(int i=0;i<(int)rw3.land_queue1.size();i++){
-                if(rw3.land_queue1[i].second == 0)rw3.land_queue1.erase(rw3.land_queue1.begin()+i);
-                else rw3.land_queue1[i].second--;
+                rw3.land_queue1[i].second--;
             }
             for(int i=0;i<(int)rw3.land_queue2.size();i++){
-                if(rw3.land_queue2[i].second == 0)rw3.land_queue2.erase(rw3.land_queue2.begin()+i);
-                else rw3.land_queue2[i].second--;
+                rw3.land_queue2[i].second--;
             }
             for(int i=0;i<(int)rw4.land_queue1.size();i++){
-                if(rw4.land_queue1[i].second == 0)rw4.land_queue1.erase(rw4.land_queue1.begin()+i);
-                else rw4.land_queue1[i].second--;
+                rw4.land_queue1[i].second--;
             }
             for(int i=0;i<(int)rw4.land_queue2.size();i++){
-                if(rw4.land_queue2[i].second == 0)rw4.land_queue2.erase(rw4.land_queue2.begin()+i);
-                else rw4.land_queue2[i].second--;
+                rw4.land_queue2[i].second--;
             }
             stat.ald_land = land_total - rw2.land_queue1.size() - rw2.land_queue2.size() - rw3.land_queue1.size() -rw3.land_queue2.size()-rw4.land_queue1.size()-rw4.land_queue2.size();
             
