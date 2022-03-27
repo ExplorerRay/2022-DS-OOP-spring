@@ -26,7 +26,6 @@ public:
     int dc_rwqe=0;//decide runway and queue只有rw234 [%3==0(rw1) %3==1(rw2)...
     vector<int> eg_queue;//queue of emergent plane's id
     
-    //vector<pair<int,int>> land_wait;
     runway rw1,rw2,rw3,rw4;
     statistic stat;
 
@@ -117,7 +116,6 @@ public:
             srand((unsigned)time(NULL));
             for(int i=0;i<land_number;i++){
                 fuel_lv = rand()%10 +1;
-                //land_wait.emplace_back(make_pair(land_id,fuel_lv));
                 cout << '(' << land_id << ", " << fuel_lv << "), ";
                 if(dc_rwqe%3==0){
                     if(rw2.land_queue1.size() <= rw2.land_queue2.size())rw2.land_queue1.emplace_back(make_pair(land_id,fuel_lv));
@@ -220,21 +218,21 @@ public:
             if(eg_queue.size() > 4)stat.crash_plane += eg_queue.size()-4;
             for(int i=0;i<(int)eg_queue.size();i++){
                 if(i>=4)break;
-                if(i==0)rw1.id_now = eg_queue[i];
+                else if(i==0)rw1.id_now = eg_queue[i];
                 else{
                     if((dc_rwqe+i-1)%3 == 0)rw2.id_now = eg_queue[i];
                     else if((dc_rwqe+i-1)%3 == 1)rw3.id_now = eg_queue[i];
                     else rw4.id_now = eg_queue[i];
                 }
+                //stat.ald_land++;
             }
-            stat.ald_land += min((int)eg_queue.size(),4);
+            stat.ald_land = stat.ald_land + min((int)eg_queue.size(),4);
             eg_queue.clear();
             
             if(rw1.id_now == -1){
                 if(rw1.tkoff_queue.size()!=0){
                     rw1.id_now = rw1.tkoff_queue[0];
                     stat.ald_tkoff++;
-                    //pop front?
                     rw1.tkoff_queue.erase(rw1.tkoff_queue.begin());
                 }
                 else if(rw2.tkoff_queue.size()!=0){
@@ -310,6 +308,7 @@ public:
                     rw4.tkoff_queue.erase(rw4.tkoff_queue.begin());
                 }
             }
+            
             //stat.ald_tkoff = tk_total - rw1.tkoff_queue.size() - rw2.tkoff_queue.size() - rw3.tkoff_queue.size() - rw4.tkoff_queue.size();
             stat.wt_land_tm = stat.wt_land_tm + land_total - stat.ald_land;
             stat.wt_tkoff_tm = stat.wt_tkoff_tm + tk_total - stat.ald_tkoff;
@@ -340,6 +339,8 @@ public:
                 if(rw4.land_queue2[i].second == 0)rw4.land_queue2.erase(rw4.land_queue2.begin()+i);
                 else rw4.land_queue2[i].second--;
             }
+            //stat.ald_land = land_total - rw2.land_queue1.size() - rw2.land_queue2.size() - rw3.land_queue1.size() -rw3.land_queue2.size()-rw4.land_queue1.size()-rw4.land_queue2.size();
+            
             print_rwinfo();
         }
     }
@@ -359,7 +360,7 @@ int main(){
     cin.tie(0);
 
     airport ap;
-    int simu_time=500;
+    int simu_time=50;
     bool b=true;
     cout << "How many time unit you want to simulate: " << simu_time << '\n';
     for(int t=1;t<=simu_time;t++){
@@ -368,7 +369,7 @@ int main(){
         ap.run(2);
         ap.run(3);
         ap.run(4);
-        if(ap.tk_total < ap.stat.ald_tkoff){
+        if(ap.land_total < ap.stat.ald_land){
             b=false;
         }
     }
