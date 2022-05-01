@@ -2,7 +2,13 @@
 
 using namespace std;
 
+class node{
+public:
+    char ch;
+    int cnt;
+};
 int main(int argc, const char* argv[]){
+    priority_queue<pair<int,node*>, vector<pair<int,node*>>, greater<pair<int,node*>>> pq;
     fstream inptxt;
     vector<string> all_args;
     all_args.assign(argv, argv + argc); // convert command line argument to string 
@@ -24,14 +30,23 @@ int main(int argc, const char* argv[]){
         chcnt[20]=4;chcnt[21]=1;chcnt[22]=10;chcnt[23]=10;chcnt[24]=1;
         chcnt[25]=1;
         int c=0;
+        node *nn;//new node
         for(int i=0;i<52;i++){
             if(chcnt[i]!=0){
                 c++;
                 if(i<=25){
                     cout << (char)('A'+i) << " = " << chcnt[i] << " | ";
+                    nn = new node;
+                    nn->ch = (char)('A'+i);
+                    nn->cnt = chcnt[i];
+                    pq.emplace(make_pair(chcnt[i], nn));
                 }
                 else{
                     cout << (char)('a'+i) << " = " << chcnt[i] << " | ";
+                    nn = new node;
+                    nn->ch = (char)('a'+i);
+                    nn->cnt = chcnt[i];
+                    pq.emplace(make_pair(chcnt[i], nn));
                 }
             }
 
