@@ -4,7 +4,7 @@ using namespace std;
 
 class node{
 public:
-    char ch;
+    char ch='\0';
     int cnt;
     node *left;
     node *right;
@@ -65,6 +65,24 @@ int main(int argc, const char* argv[]){
             if(c%10==0)cout << '\n';
         }
         cout << "\n\n";
+
+        pair<int,node*> fir,sec;//construct huffman tree
+        node *parent;
+        while(pq.size()!=1){
+            fir = pq.top();
+            pq.pop();
+            sec = pq.top();
+            pq.pop();
+            parent = new node;
+            parent->cnt = fir.first + sec.first;
+            parent->left = fir.second;
+            parent->right = sec.second;
+            pq.emplace(make_pair(parent->cnt, parent));
+        }
+
+        node *root = pq.top().second;//traversal the tree
+        stack<node*> stk;
+        stk.emplace(root);
     }
     else{
         string filename = argv[1];
