@@ -6,9 +6,21 @@ class node{
 public:
     char ch;
     int cnt;
+    node *left;
+    node *right;
 };
+class comp{
+public:
+    bool operator()(const pair<int, node*>& a, const pair<int, node*>& b){
+        if(a.first == b.first){
+            return a.second->ch > b.second->ch;
+        }
+        else return a.first > b.first;
+    }
+};
+
 int main(int argc, const char* argv[]){
-    priority_queue<pair<int,node*>, vector<pair<int,node*>>, greater<pair<int,node*>>> pq;
+    priority_queue<pair<int,node*>, vector<pair<int,node*>>, comp> pq;
     fstream inptxt;
     vector<string> all_args;
     all_args.assign(argv, argv + argc); // convert command line argument to string 
