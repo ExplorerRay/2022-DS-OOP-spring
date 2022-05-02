@@ -234,10 +234,24 @@ int main(int argc, const char* argv[]){
                 }
             }
         }
+
+        inptxt >> inp;
+        cout << "\nHuffman code : " << inp << '\n';
+        cout << "decode : ";
+        node *nw = root;
+        for(int x=0;x<(int)inp.size();x++){
+            if(inp[x]=='0')nw = nw->left;
+            else nw = nw->right;
+
+            if(nw->ch!='\0'){
+                cout << nw->ch;
+                nw = root;
+            }
+        }
+        if(nw != root)cout << " -wrong decode-";
+
         cout << "\nWEPL : " << wepl << '\n';
     }
-
-    
 
     return 0;
 }
