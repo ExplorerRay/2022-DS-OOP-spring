@@ -33,7 +33,9 @@ int main(int argc, const char* argv[]){
     }
     cout << "\n";
     
+    int wepl=0;
 	vector<int> chcnt(52,0);//character count 0-25 A-Z  26-51 a-z
+    vector<string> chcd(52,"\0");//character and their huffman code
     
     if(argc != 2){
         cout << "part1\n";// or cout << '\n';
@@ -56,21 +58,20 @@ int main(int argc, const char* argv[]){
                     pq.emplace(make_pair(chcnt[i], nn));
                 }
                 else{
-                    cout << (char)('a'+i) << " = " << chcnt[i] << " | ";
+                    cout << (char)('a'+i-26) << " = " << chcnt[i] << " | ";
                     nn = new node;
-                    nn->ch = (char)('a'+i);
+                    nn->ch = (char)('a'+i-26);
                     nn->cnt = chcnt[i];
                     pq.emplace(make_pair(chcnt[i], nn));
                 }
+                if(c%10==0)cout << '\n';
             }
-
-            if(c%10==0)cout << '\n';
         }
         cout << "\n\n";
 
         pair<int,node*> fir,sec;//construct huffman tree
         node *parent;
-        while(pq.size()!=1){
+        while(pq.size()>=2){
             fir = pq.top();
             pq.pop();
             sec = pq.top();
@@ -81,9 +82,7 @@ int main(int argc, const char* argv[]){
             parent->right = sec.second;
             pq.emplace(make_pair(parent->cnt, parent));
         }
-
-        string code="\0";
-        vector<string> chcd(52,"\0");//character and their huffman code
+ 
         node *root = pq.top().second, *tp;
         queue<node*> que;
         que.emplace(root);
@@ -122,7 +121,6 @@ int main(int argc, const char* argv[]){
             }
             que.pop();
         }
-        int wepl=0;
         for(int x=0;x<52;x++){
             if(chcd[x]!="\0"){
                 wepl = wepl + chcnt[x]*chcd[x].size();
@@ -130,7 +128,7 @@ int main(int argc, const char* argv[]){
                     cout << (char)(x+'A') << " : " << chcd[x] << '\n';
                 }
                 else{
-                    cout << (char)(x+'a') << " : " << chcd[x] << '\n';
+                    cout << (char)(x+'a'-26) << " : " << chcd[x] << '\n';
                 }
             }
         }
@@ -138,11 +136,13 @@ int main(int argc, const char* argv[]){
     }
     else{
         string filename = argv[1];
-        cout << "read file from : " << "test/" << filename << endl;
+        //cout << "read file from : " << "test/" << filename << endl;
 
         inptxt.open(filename, ios::in);
+        if(!inptxt.is_open())return 0;
         string inp;
         inptxt >> inp;
+        cout << "characters : " << inp << "\n\n";
         for(int i=0;i<(int)inp.size();i++){
             if(inp[i]<='Z' && inp[i]>='A')chcnt[inp[i]-'A']++;
             else chcnt[inp[i]-'a'+26]++;
@@ -160,19 +160,81 @@ int main(int argc, const char* argv[]){
                     pq.emplace(make_pair(chcnt[i], nn));
                 }
                 else{
-                    cout << (char)('a'+i) << " = " << chcnt[i] << " | ";
+                    cout << (char)('a'+i-26) << " = " << chcnt[i] << " | ";
                     nn = new node;
-                    nn->ch = (char)('a'+i);
+                    nn->ch = (char)('a'+i-26);
                     nn->cnt = chcnt[i];
                     pq.emplace(make_pair(chcnt[i], nn));
                 }
+                if(c%10==0)cout << '\n';
             }
-
-            if(c%10==0)cout << '\n';
         }
         cout << "\n\n";
 
+        pair<int,node*> fir,sec;//construct huffman tree
+        node *parent;
+        while(pq.size()>=2){
+            fir = pq.top();
+            pq.pop();
+            sec = pq.top();
+            pq.pop();
+            parent = new node;
+            parent->cnt = fir.first + sec.first;
+            parent->left = fir.second;
+            parent->right = sec.second;
+            pq.emplace(make_pair(parent->cnt, parent));
+        }
 
+        node *root = pq.top().second, *tp;
+        queue<node*> que;
+        que.emplace(root);
+        root->visited = true;
+        while(!que.empty()){//traversal the tree
+            tp=que.front();
+            if(tp->left->visited == false){
+                if(tp->left->ch=='\0'){
+                    tp->left->cd = tp->cd + '0';
+                    que.emplace(tp->left);
+                }
+                else{
+                    if(tp->left->ch<='Z' && tp->left->ch>='A'){
+                        chcd[tp->left->ch-'A']= tp->cd + '0';
+                    }
+                    else{
+                        chcd[tp->left->ch-'a'+26]= tp->cd + '0';
+                    }
+                }
+                tp->left->visited = true;
+            }
+            if(tp->right->visited == false){
+                if(tp->right->ch=='\0'){
+                    tp->right->cd = tp->cd + '1';
+                    que.emplace(tp->right);
+                }
+                else{
+                    if(tp->right->ch<='Z' && tp->right->ch>='A'){
+                        chcd[tp->right->ch-'A']= tp->cd + '1';
+                    }
+                    else{
+                        chcd[tp->right->ch-'a'+26]= tp->cd + '1';
+                    }
+                }
+                tp->right->visited = true;
+            }
+            que.pop();
+        }
+        for(int x=0;x<52;x++){
+            if(chcd[x]!="\0"){
+                wepl = wepl + chcnt[x]*chcd[x].size();
+                if(x<=25){
+                    cout << (char)(x+'A') << " : " << chcd[x] << '\n';
+                }
+                else{
+                    cout << (char)(x+'a'-26) << " : " << chcd[x] << '\n';
+                }
+            }
+        }
+        cout << "\nWEPL : " << wepl << '\n';
     }
 
     
