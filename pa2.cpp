@@ -6,8 +6,10 @@ class node{
 public:
     char ch='\0';
     int cnt;
-    node *left;
-    node *right;
+    node *left = nullptr;
+    node *right = nullptr;
+    bool visited = false;
+    string cd="\0";
 };
 class comp{
 public:
@@ -80,9 +82,59 @@ int main(int argc, const char* argv[]){
             pq.emplace(make_pair(parent->cnt, parent));
         }
 
-        node *root = pq.top().second;//traversal the tree
-        stack<node*> stk;
-        stk.emplace(root);
+        string code="\0";
+        vector<string> chcd(52,"\0");//character and their huffman code
+        node *root = pq.top().second, *tp;
+        queue<node*> que;
+        que.emplace(root);
+        root->visited = true;
+        while(!que.empty()){//traversal the tree
+            tp=que.front();
+            if(tp->left->visited == false){
+                if(tp->left->ch=='\0'){
+                    tp->left->cd = tp->cd + '0';
+                    que.emplace(tp->left);
+                }
+                else{
+                    if(tp->left->ch<='Z' && tp->left->ch>='A'){
+                        chcd[tp->left->ch-'A']= tp->cd + '0';
+                    }
+                    else{
+                        chcd[tp->left->ch-'a'+26]= tp->cd + '0';
+                    }
+                }
+                tp->left->visited = true;
+            }
+            if(tp->right->visited == false){
+                if(tp->right->ch=='\0'){
+                    tp->right->cd = tp->cd + '1';
+                    que.emplace(tp->right);
+                }
+                else{
+                    if(tp->right->ch<='Z' && tp->right->ch>='A'){
+                        chcd[tp->right->ch-'A']= tp->cd + '1';
+                    }
+                    else{
+                        chcd[tp->right->ch-'a'+26]= tp->cd + '1';
+                    }
+                }
+                tp->right->visited = true;
+            }
+            que.pop();
+        }
+        int wepl=0;
+        for(int x=0;x<52;x++){
+            if(chcd[x]!="\0"){
+                wepl = wepl + chcnt[x]*chcd[x].size();
+                if(x<=25){
+                    cout << (char)(x+'A') << " : " << chcd[x] << '\n';
+                }
+                else{
+                    cout << (char)(x+'a') << " : " << chcd[x] << '\n';
+                }
+            }
+        }
+        cout << "\nWEPL : " << wepl << '\n';
     }
     else{
         string filename = argv[1];
@@ -95,10 +147,34 @@ int main(int argc, const char* argv[]){
             if(inp[i]<='Z' && inp[i]>='A')chcnt[inp[i]-'A']++;
             else chcnt[inp[i]-'a'+26]++;
         }
+        int c=0;
+        node *nn;//new node
+        for(int i=0;i<52;i++){
+            if(chcnt[i]!=0){
+                c++;
+                if(i<=25){
+                    cout << (char)('A'+i) << " = " << chcnt[i] << " | ";
+                    nn = new node;
+                    nn->ch = (char)('A'+i);
+                    nn->cnt = chcnt[i];
+                    pq.emplace(make_pair(chcnt[i], nn));
+                }
+                else{
+                    cout << (char)('a'+i) << " = " << chcnt[i] << " | ";
+                    nn = new node;
+                    nn->ch = (char)('a'+i);
+                    nn->cnt = chcnt[i];
+                    pq.emplace(make_pair(chcnt[i], nn));
+                }
+            }
+
+            if(c%10==0)cout << '\n';
+        }
+        cout << "\n\n";
+
+
     }
 
-    
-    
     
 
     return 0;
