@@ -38,7 +38,7 @@ int main(int argc, const char* argv[]){
     vector<string> chcd(52,"\0");//character and their huffman code
     
     if(argc != 2){
-        cout << "part1\n";// or cout << '\n';
+        cout << '\n';
         chcnt[0]=11;chcnt[1]=5;chcnt[2]=2;chcnt[3]=3;chcnt[4]=12;
         chcnt[5]=3;chcnt[6]=5;chcnt[7]=6;chcnt[8]=8;chcnt[9]=1;
         chcnt[10]=2;chcnt[11]=4;chcnt[12]=8;chcnt[13]=7;chcnt[14]=2;
