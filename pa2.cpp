@@ -47,18 +47,24 @@ int main(int argc, const char* argv[]){
         chcnt[25]=1;
         int c=0;
         node *nn;//new node
+        string op;
         for(int i=0;i<52;i++){
             if(chcnt[i]!=0){
                 c++;
+                cout << setw(10);
                 if(i<=25){
-                    cout << (char)('A'+i) << " = " << chcnt[i] << " | ";
+                    op = (char)('A'+i);
+                    op+=" = ";op+=to_string(chcnt[i]);op+=" | ";
+                    cout << op;
                     nn = new node;
                     nn->ch = (char)('A'+i);
                     nn->cnt = chcnt[i];
                     pq.emplace(make_pair(chcnt[i], nn));
                 }
                 else{
-                    cout << (char)('a'+i-26) << " = " << chcnt[i] << " | ";
+                    op = (char)('a'+i-26);
+                    op+=" = ";op+=to_string(chcnt[i]);op+=" | ";
+                    cout << op;
                     nn = new node;
                     nn->ch = (char)('a'+i-26);
                     nn->cnt = chcnt[i];
@@ -149,18 +155,25 @@ int main(int argc, const char* argv[]){
         }
         int c=0;
         node *nn;//new node
+        string op;
         for(int i=0;i<52;i++){
             if(chcnt[i]!=0){
                 c++;
                 if(i<=25){
-                    cout << (char)('A'+i) << " = " << chcnt[i] << " | ";
+                    op = (char)('A'+i);
+                    op+=" = ";op+=to_string(chcnt[i]);op+=" | ";
+                    cout << op;
+                    //cout << (char)('A'+i) << " = " << chcnt[i] << " | ";
                     nn = new node;
                     nn->ch = (char)('A'+i);
                     nn->cnt = chcnt[i];
                     pq.emplace(make_pair(chcnt[i], nn));
                 }
                 else{
-                    cout << (char)('a'+i-26) << " = " << chcnt[i] << " | ";
+                    op = (char)('a'+i-26);
+                    op+=" = ";op+=to_string(chcnt[i]);op+=" | ";
+                    cout << op;
+                    //cout << (char)('a'+i-26) << " = " << chcnt[i] << " | ";
                     nn = new node;
                     nn->ch = (char)('a'+i-26);
                     nn->cnt = chcnt[i];
