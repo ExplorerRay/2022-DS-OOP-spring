@@ -22,8 +22,15 @@ vector<int> insertionSort(vector<int> arr){
 
     return arr;
 }
-void quickSort(vector<int> arr){
 
+int position(vector<int> arr, int l, int r){//return position(index) of pivot
+    int pivot = arr[l];
+    int i = l+1;
+}
+vector<int> quickSort(vector<int> arr, int l, int r){
+    
+
+    return arr;
 }
 void radixSort(vector<int> arr){
 
@@ -34,7 +41,7 @@ int main(){
 
     cout << "DS-OO Program3-Demo\n";
     srand(time(NULL));
-    double START, END;
+    double START, END;//sorting time(if sort in 1 ms, will output 0s)
 
     int inp;
     cin >> inp;
@@ -48,6 +55,14 @@ int main(){
         END = clock();
         cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n\n\n";
 
+        //quick
+        cout << "Quick sort:\n";
+        cout << "Before : ";
+        for(int t=0;t<(int)v.size();t++)cout << v[t] << ',';cout << "\n\n";
+        START = clock();
+        vector<int> qs = quickSort(v, 0, v.size()-1);
+        END = clock();
+        cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n\n\n";
     }
     else{
         vector<int> v(inp);
@@ -63,6 +78,9 @@ int main(){
             cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n\n\n";
 
             //quick
+            cout << "Quick sort:\n";
+            cout << "Before : ";
+            for(int t=0;t<(int)v.size();t++)cout << v[t] << ',';cout << "\n\n";
         }
         else{
             cout << "Insertion sort:\n";
@@ -71,7 +89,7 @@ int main(){
             END = clock();
             cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n\n\n";
 
-
+            cout << "Quick sort:\n";
         }
     }
 }
