@@ -54,8 +54,37 @@ void quickSort(vector<int> &arr, int l, int r){
     quickSort(arr, l, pos-1);
     quickSort(arr, pos+1, r);
 }
-void radixSort(vector<int> arr){
 
+void radixSort(vector<int> &arr){
+    vector<vector<int>> place(10);
+    int sz = arr.size(), sd = 1, cnt;
+    for(int d=1;d<=3;d++){//digit from low to high
+        if(sz<=100){
+            if(d==1)cout << "First-pass:\n";
+            else if(d==2)cout << "Second-pass\n";
+            else cout << "Third-pass\n";
+        }
+
+        for(int t=0;t<sz;t++){
+            place[(arr[t]/sd)%10].emplace_back(arr[t]);
+        }
+        cnt=0;
+        for(int i=0;i<10;i++){
+            if(sz<=100)cout << i << " |";
+            for(int j=0;j<(int)place[i].size();j++){
+                if(sz<=100)cout << " --> " << place[i][j];
+                arr[cnt++] = place[i][j];
+            }
+            if(sz<=100)cout << '\n';
+            place[i].clear();
+        }
+        if(sz<=100){
+            cout << "resulting chain : ";
+            for(int t=0;t<sz;t++)cout << arr[t] << ',';
+            cout << "\n\n";
+        }
+        sd*=10;
+    }
 }
 
 int main(){
@@ -80,16 +109,24 @@ int main(){
         //quick
         cout << "Quick sort:\n";
         cout << "Before : ";
-        for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n\n";
+        for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n";
         vector<int> qs = v;
         START = clock();
         quickSort(qs, 0, qs.size()-1);
         END = clock();
         cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
-        if(qs == is)cout << "Correct!!\n\n";
-        else cout << "Not correct\n\n";
+        if(qs == is)cout << "Correct!!\n\n\n";
+        else cout << "Not correct\n\n\n";
 
         //radix
+        cout << "Radix sort:\n";
+        vector<int> rs = v;
+        START = clock();
+        radixSort(rs);
+        END = clock();
+        cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
+        if(rs == is)cout << "Correct!!\n\n\n";
+        else cout << "Not correct\n\n\n";
     }
     else{
         vector<int> v(inp);
@@ -107,15 +144,23 @@ int main(){
             //quick
             cout << "Quick sort:\n";
             cout << "Before : ";
-            for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n\n";
+            for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n";
             vector<int> qs = v;
             START = clock();
             quickSort(qs, 0, qs.size()-1);
             END = clock();
             cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
-            if(qs == is)cout << "Correct!!\n\n";
-            else cout << "Not correct\n\n";
+            if(qs == is)cout << "Correct!!\n\n\n";
+            else cout << "Not correct\n\n\n";
 
+            cout << "Radix sort:\n";
+            vector<int> rs = v;
+            START = clock();
+            radixSort(rs);
+            END = clock();
+            cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
+            if(rs == is)cout << "Correct!!\n\n\n";
+            else cout << "Not correct\n\n\n";
         }
         else{
             cout << "Insertion sort:\n";
@@ -130,8 +175,17 @@ int main(){
             quickSort(qs, 0, qs.size()-1);
             END = clock();
             cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
-            if(qs == is)cout << "Correct!!\n\n";
-            else cout << "Not correct\n\n";
+            if(qs == is)cout << "Correct!!\n\n\n";
+            else cout << "Not correct\n\n\n";
+
+            cout << "Radix sort:\n";
+            vector<int> rs = v;
+            START = clock();
+            radixSort(rs);
+            END = clock();
+            cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
+            if(rs == is)cout << "Correct!!\n\n\n";
+            else cout << "Not correct\n\n\n";
         }
     }
 }
