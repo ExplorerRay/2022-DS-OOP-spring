@@ -90,7 +90,7 @@ void radixSort(vector<int> &arr){
 int main(){
     ios::sync_with_stdio(false);cin.tie(0);
 
-    cout << "DS-OO Program3-Demo\n";
+    cout << "DS-OO Program3-Demo\n";cout << flush;
     srand(time(NULL));
     double START, END;//sorting time(if sort in 1 ms, will output 0s)
 
