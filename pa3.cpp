@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+#include<windows.h>
 
 using namespace std;
 
@@ -93,6 +94,13 @@ int main(){
     cout << "DS-OO Program3-Demo\n";cout << flush;
     srand(time(NULL));
 
+    LARGE_INTEGER timeStart;    //large_integer開始時間
+    LARGE_INTEGER timeEnd;      //結束時間
+
+    LARGE_INTEGER frequency;    //計時器頻率
+    QueryPerformanceFrequency(&frequency);//返回硬體支援的高精度計數器的頻率
+    double quadpart = (double)frequency.QuadPart,st;
+
     int inp;
     cin >> inp;
     if(inp<=0){//part 1
@@ -100,30 +108,33 @@ int main(){
         cout << "Before : ";
         for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n\n";
         cout << "Insertion sort:\n";
-        auto START = chrono::high_resolution_clock::now();
+        QueryPerformanceCounter(&timeStart);
         vector<int> is = insertionSort(v);//saved for check correction
-        auto END = chrono::high_resolution_clock::now();
-        cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n\n\n";
+        QueryPerformanceCounter(&timeEnd);
+        st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+        cout << "sorting time : " << fixed << setprecision(7) << st << " s\n\n\n";
 
         //quick
         cout << "Quick sort:\n";
         cout << "Before : ";
         for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n";
         vector<int> qs = v;
-        START = chrono::high_resolution_clock::now();
+        QueryPerformanceCounter(&timeStart);
         quickSort(qs, 0, qs.size()-1);
-        END = chrono::high_resolution_clock::now();
-        cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n";
+        QueryPerformanceCounter(&timeEnd);
+        st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+        cout << "sorting time : " << st << " s\n";
         if(qs == is)cout << "Correct!!\n\n\n";
         else cout << "Not correct\n\n\n";
 
         //radix
         cout << "Radix sort:\n";
         vector<int> rs = v;
-        START = chrono::high_resolution_clock::now();
+        QueryPerformanceCounter(&timeStart);
         radixSort(rs);
-        END = chrono::high_resolution_clock::now();
-        cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n";
+        QueryPerformanceCounter(&timeEnd);
+        st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+        cout << "sorting time : " << st << " s\n";
         if(rs == is)cout << "Correct!!\n\n\n";
         else cout << "Not correct\n\n\n";
     }
@@ -135,54 +146,60 @@ int main(){
             cout << "Before : ";
             for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n\n";
             cout << "Insertion sort:\n";
-            auto START = chrono::high_resolution_clock::now();
-            vector<int> is = insertionSort(v);
-            auto END = chrono::high_resolution_clock::now();
-            cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n\n\n";
+            QueryPerformanceCounter(&timeStart);
+            vector<int> is = insertionSort(v);//saved for check correction
+            QueryPerformanceCounter(&timeEnd);
+            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+            cout << "sorting time : " << fixed << setprecision(7) << st << " s\n\n\n";
 
             //quick
             cout << "Quick sort:\n";
             cout << "Before : ";
             for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n";
             vector<int> qs = v;
-            START = chrono::high_resolution_clock::now();
+            QueryPerformanceCounter(&timeStart);
             quickSort(qs, 0, qs.size()-1);
-            END = chrono::high_resolution_clock::now();
-            cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n";
+            QueryPerformanceCounter(&timeEnd);
+            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+            cout << "sorting time : " << st << " s\n";
             if(qs == is)cout << "Correct!!\n\n\n";
             else cout << "Not correct\n\n\n";
 
             cout << "Radix sort:\n";
             vector<int> rs = v;
-            START = chrono::high_resolution_clock::now();
+            QueryPerformanceCounter(&timeStart);
             radixSort(rs);
-            END = chrono::high_resolution_clock::now();
-            cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n";
+            QueryPerformanceCounter(&timeEnd);
+            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+            cout << "sorting time : " << st << " s\n";
             if(rs == is)cout << "Correct!!\n\n\n";
             else cout << "Not correct\n\n\n";
         }
         else{
             cout << "Insertion sort:\n";
-            auto START = chrono::high_resolution_clock::now();
-            vector<int> is = insertionSort(v);
-            auto END = chrono::high_resolution_clock::now();
-            cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n\n\n";
+            QueryPerformanceCounter(&timeStart);
+            vector<int> is = insertionSort(v);//saved for check correction
+            QueryPerformanceCounter(&timeEnd);
+            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+            cout << "sorting time : " << fixed << setprecision(7) << st << " s\n\n\n";
 
             cout << "Quick sort:\n";
             vector<int> qs = v;
-            START = chrono::high_resolution_clock::now();
+            QueryPerformanceCounter(&timeStart);
             quickSort(qs, 0, qs.size()-1);
-            END = chrono::high_resolution_clock::now();
-            cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n";
+            QueryPerformanceCounter(&timeEnd);
+            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+            cout << "sorting time : " << st << " s\n";
             if(qs == is)cout << "Correct!!\n\n\n";
             else cout << "Not correct\n\n\n";
 
             cout << "Radix sort:\n";
             vector<int> rs = v;
-            START = chrono::high_resolution_clock::now();
+            QueryPerformanceCounter(&timeStart);
             radixSort(rs);
-            END = chrono::high_resolution_clock::now();
-            cout << "sorting time : " << chrono::duration_cast<chrono::nanoseconds>(END-START).count() / 10e9 << " s\n";
+            QueryPerformanceCounter(&timeEnd);
+            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
+            cout << "sorting time : " << st << " s\n";
             if(rs == is)cout << "Correct!!\n\n\n";
             else cout << "Not correct\n\n\n";
         }
