@@ -59,33 +59,45 @@ void quickSort(vector<int> &arr, int l, int r){
 void radixSort(vector<int> &arr){
     vector<vector<int>> place(10);
     int sz = arr.size(), sd = 1, cnt;
-    for(int d=1;d<=3;d++){//digit from low to high
-        if(sz<=100){
+    if(sz<=100){
+        for(int d=1;d<=3;d++){//digit from low to high
             if(d==1)cout << "First-pass:\n";
             else if(d==2)cout << "Second-pass\n";
             else cout << "Third-pass\n";
-        }
 
+            for(int t=0;t<sz;t++){
+                place[(arr[t]/sd)%10].emplace_back(arr[t]);
+            }
+            cnt=0;
+            for(int i=0;i<10;i++){
+                cout << i << " |";
+                for(int j=0;j<(int)place[i].size();j++){
+                    cout << " --> " << place[i][j];
+                    arr[cnt++] = place[i][j];
+                }
+                cout << '\n';
+                place[i].clear();
+            }
+            cout << "resulting chain : ";
+            for(int t=0;t<sz;t++)cout << arr[t] << ',';
+            cout << "\n\n";
+
+            sd*=10;//select digit
+        }    
+    }
+    else{for(int d=1;d<=3;d++){//sz>100  format2
         for(int t=0;t<sz;t++){
             place[(arr[t]/sd)%10].emplace_back(arr[t]);
         }
         cnt=0;
         for(int i=0;i<10;i++){
-            if(sz<=100)cout << i << " |";
             for(int j=0;j<(int)place[i].size();j++){
-                if(sz<=100)cout << " --> " << place[i][j];
                 arr[cnt++] = place[i][j];
             }
-            if(sz<=100)cout << '\n';
             place[i].clear();
         }
-        if(sz<=100){
-            cout << "resulting chain : ";
-            for(int t=0;t<sz;t++)cout << arr[t] << ',';
-            cout << "\n\n";
-        }
         sd*=10;
-    }
+    }}
 }
 
 int main(){
