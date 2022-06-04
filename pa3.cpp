@@ -1,5 +1,4 @@
 #include<bits/stdc++.h>
-#include<windows.h>
 
 using namespace std;
 
@@ -105,13 +104,7 @@ int main(){
 
     cout << "DS-OO Program3-Demo\n";cout << flush;
     srand(time(NULL));
-
-    LARGE_INTEGER timeStart;    //large_integer開始時間
-    LARGE_INTEGER timeEnd;      //結束時間
-
-    LARGE_INTEGER frequency;    //計時器頻率
-    QueryPerformanceFrequency(&frequency);//返回硬體支援的高精度計數器的頻率
-    double quadpart = (double)frequency.QuadPart,st;
+    double START, END;//sorting time(if sort in 1 ms, will output 0s)
 
     int inp;
     cin >> inp;
@@ -120,33 +113,30 @@ int main(){
         cout << "Before : ";
         for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n\n";
         cout << "Insertion sort:\n";
-        QueryPerformanceCounter(&timeStart);
+        START = clock();
         vector<int> is = insertionSort(v);//saved for check correction
-        QueryPerformanceCounter(&timeEnd);
-        st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-        cout << "sorting time : " << fixed << setprecision(7) << st << " s\n\n\n";
+        END = clock();
+        cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n\n\n";
 
         //quick
         cout << "Quick sort:\n";
         cout << "Before : ";
         for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n";
         vector<int> qs = v;
-        QueryPerformanceCounter(&timeStart);
+        START = clock();
         quickSort(qs, 0, qs.size()-1);
-        QueryPerformanceCounter(&timeEnd);
-        st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-        cout << "sorting time : " << st << " s\n";
+        END = clock();
+        cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
         if(qs == is)cout << "Correct!!\n\n\n";
         else cout << "Not correct\n\n\n";
 
         //radix
         cout << "Radix sort:\n";
         vector<int> rs = v;
-        QueryPerformanceCounter(&timeStart);
+        START = clock();
         radixSort(rs);
-        QueryPerformanceCounter(&timeEnd);
-        st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-        cout << "sorting time : " << st << " s\n";
+        END = clock();
+        cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
         if(rs == is)cout << "Correct!!\n\n\n";
         else cout << "Not correct\n\n\n";
     }
@@ -158,60 +148,53 @@ int main(){
             cout << "Before : ";
             for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n\n";
             cout << "Insertion sort:\n";
-            QueryPerformanceCounter(&timeStart);
-            vector<int> is = insertionSort(v);//saved for check correction
-            QueryPerformanceCounter(&timeEnd);
-            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-            cout << "sorting time : " << fixed << setprecision(7) << st << " s\n\n\n";
+            START = clock();
+            vector<int> is = insertionSort(v);
+            END = clock();
+            cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n\n\n";
 
-            //quick
             cout << "Quick sort:\n";
             cout << "Before : ";
             for(int t=0;t<(int)v.size();t++){cout << v[t] << ',';}cout << "\n";
             vector<int> qs = v;
-            QueryPerformanceCounter(&timeStart);
+            START = clock();
             quickSort(qs, 0, qs.size()-1);
-            QueryPerformanceCounter(&timeEnd);
-            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-            cout << "sorting time : " << st << " s\n";
+            END = clock();
+            cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
             if(qs == is)cout << "Correct!!\n\n\n";
             else cout << "Not correct\n\n\n";
 
             cout << "Radix sort:\n";
             vector<int> rs = v;
-            QueryPerformanceCounter(&timeStart);
+            START = clock();
             radixSort(rs);
-            QueryPerformanceCounter(&timeEnd);
-            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-            cout << "sorting time : " << st << " s\n";
+            END = clock();
+            cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
             if(rs == is)cout << "Correct!!\n\n\n";
             else cout << "Not correct\n\n\n";
         }
         else{
             cout << "Insertion sort:\n";
-            QueryPerformanceCounter(&timeStart);
-            vector<int> is = insertionSort(v);//saved for check correction
-            QueryPerformanceCounter(&timeEnd);
-            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-            cout << "sorting time : " << fixed << setprecision(7) << st << " s\n\n\n";
+            START = clock();
+            vector<int> is = insertionSort(v);
+            END = clock();
+            cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n\n\n";
 
             cout << "Quick sort:\n";
             vector<int> qs = v;
-            QueryPerformanceCounter(&timeStart);
+            START = clock();
             quickSort(qs, 0, qs.size()-1);
-            QueryPerformanceCounter(&timeEnd);
-            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-            cout << "sorting time : " << st << " s\n";
+            END = clock();
+            cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
             if(qs == is)cout << "Correct!!\n\n\n";
             else cout << "Not correct\n\n\n";
 
             cout << "Radix sort:\n";
             vector<int> rs = v;
-            QueryPerformanceCounter(&timeStart);
+            START = clock();
             radixSort(rs);
-            QueryPerformanceCounter(&timeEnd);
-            st = (timeEnd.QuadPart - timeStart.QuadPart) / quadpart;
-            cout << "sorting time : " << st << " s\n";
+            END = clock();
+            cout << "sorting time : " << (END - START) / CLOCKS_PER_SEC << " s\n";
             if(rs == is)cout << "Correct!!\n\n\n";
             else cout << "Not correct\n\n\n";
         }
