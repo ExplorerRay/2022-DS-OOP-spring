@@ -1,0 +1,9 @@
+[submodule "DS-pa1"]
+	path = DS-pa1
+	url = git@github.com:ExplorerRay/DS-pa1.git
+[submodule "DS-pa2"]
+	path = DS-pa2
+	url = git@github.com:ExplorerRay/DS-pa2.git
+[submodule "DS-pa3"]
+	path = DS-pa3
+	url = git@github.com:ExplorerRay/DS-pa3.git
